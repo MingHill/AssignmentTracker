@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Assignment Dashboard</title>
+<script>
+    function validateTask() {
+        var content = document.getElementById("content").value;
+        var dueDate = document.getElementById("due_date").value;
+        var course = document.getElementById("course").value;
+
+        if (!content || !dueDate || !course) {
+            alert("All fields must be filled out.");
+            return false;
+        }
+
+        var dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dueDate.match(dateRegex)) {
+            alert("Invalid date format. Please use yyyy-mm-dd format.");
+            return false;
+        }
+
+        var currentDate = new Date().toISOString().slice(0, 10);
+        if (dueDate < currentDate) {
+            alert("Due date must be in the future.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+{% endblock %}
+
+{% block body %}
+<div class = "content">
+    <h1 style="text-align: center"> Update Task </h1>
+    <div class="form">
+        <form action="/update/{{task.id}}" method="POST" onsubmit="return validateTask()">
+            <input type="text" name="content" id="content", value="{{task.content}}">
+            <input type="date" name="due_date" id="due_date", value="{{task.due_date.date() if task.due_date else ''}}">
+            <input type="text" name="course" id = "course", value ="{{task.course}}">
+            <input type="submit" value = "Update">
+        </form>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Assignment Dashboard</title>
+
+<script>
+    function validateTask() {
+        var content = document.getElementById("content").value;
+        var dueDate = document.getElementById("due_date").value;
+        var course = document.getElementById("course").value;
+
+        if (!content || !dueDate || !course) {
+            alert("All fields must be filled out.");
+            return false;
+        }
+
+        var dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dueDate.match(dateRegex)) {
+            alert("Invalid date format. Please use yyyy-mm-dd format.");
+            return false;
+        }
+
+        var currentDate = new Date().toISOString().slice(0, 10);
+        if (dueDate < currentDate) {
+            alert("Due date must be in the future.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+{% endblock %}
+
+{% block body %}
+<div class = "content">
+    <h1 style="text-align:center"> Assignment Dashboard  </h1>
+    {% if tasks|length < 1  %}
+    <h4 style= "text-align: center"> There are no assignments. Create one below!<h4>
+    {% else %}
+    <table> 
+        <tr> 
+            <th>Course</th>  
+            <th>Task</th>
+            <th>Due Date</th>
+            <th>Actions</th> 
+        </tr>
+        {% for task in tasks %}
+        <tr>
+            <td>{{ task.course}}</td>
+            <td>{{ task.content}}</td>
+            <td>{{ task.due_date.date() if task.due_date else 'N/A' }}</td>
+            <td>
+                <a href="/delete/{{task.id}}">Delete</a>
+                <br>
+                <a href="/update/{{task.id}}">Update</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    <form action="/" method="POST" onsubmit ="return validateTask()">
+        <input type="text" name="content" id="content" placeholder = "Enter Assignment Details">
+        <input type="text" name="due_date" id  ="due_date" placeholder = "Due yyyy-mm-dd">
+        <input type="text" name="course" id="course" placeholder ="Course">
+        <input type="submit" value = "Add Task">
+    </form>
+</div>
+{% endblock %}
