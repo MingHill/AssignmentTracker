@@ -19,7 +19,7 @@ Installation
 1. Clone the repository:
 git clone https://github.com/MingHill/AssignmentTracker.git
 2. Change into the project directory:
-cd assignmentTrack
+cd AssignmentTracker
 3. Create a virtual environment (optional but recommended):
 python3 -m venv env
 source env/bin/activate
